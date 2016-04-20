@@ -12,38 +12,38 @@ for i in range(1,105):
 	text = ""
 	try:
 		for line in open(filename, 'r'):
-			text += line
+			line = line.split("。")
+			text += line[0]
 		calculator.addSentence(text)
 	except:
 		print "err"
 
 calculator.calc()
 
+f = open('./datas/tfidf_first_sentence.txt', 'a')
+for sentence in calculator.tfidf:
+	text = ""
+	# for tfidf in sentence:
+	text += sentence[0][0] + ":" + str(sentence[0][1]) +","
+	text += "\n"
+	f.write(text)
+f.close()
+
+# conn = sqlite3.connect('./profilemaker.db')
 # f = open('./datas/tfidf_filter.txt', 'a')
+
 # for sentence in calculator.tfidf:
 # 	text = ""
 # 	for tfidf in sentence:
 # 		if len(tfidf[0]) > 9:
-# 			text += tfidf[0] + ":" + str(tfidf[1]) +","
-# 	text += "\n"
-# 	f.write(text)
+# 			try:
+# 				sql = "insert into catchcopy values ('"+tfidf[0]+"')"
+# 				conn.execute(sql)
+# 				f.write(tfidf[0]+"\n")
+# 			except:
+# 				print "unique"
 # f.close()
 
-conn = sqlite3.connect('./profilemaker.db')
-f = open('./datas/tfidf_filter.txt', 'a')
-
-for sentence in calculator.tfidf:
-	text = ""
-	for tfidf in sentence:
-		if len(tfidf[0]) > 9:
-			try:
-				sql = "insert into catchcopy values ('"+tfidf[0]+"')"
-				conn.execute(sql)
-				f.write(tfidf[0]+"\n")
-			except:
-				print "unique"
-f.close()
-
-conn.commit()
-conn.close()
+# conn.commit()
+# conn.close()
 

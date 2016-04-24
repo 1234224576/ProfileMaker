@@ -1,0 +1,29 @@
+最適:C=2048.000000,gamma=0.000244,正答率=0.345456
+おすすめCとガンマ:[(128.0, 0.00048828125), (128.0, 0.001953125), (512.0, 0.000244140625), (1024.0, 0.000244140625), (1024.0, 0.00048828125), (1024.0, 0.0009765625), (2048.0, 0.000244140625), (2048.0, 0.0078125), (4096.0, 0.0001220703125), (4096.0, 0.000244140625), (4096.0, 0.001953125), (8192.0, 3.0517578125e-05), (8192.0, 6.103515625e-05), (8192.0, 0.0001220703125), (16384.0, 3.0517578125e-05), (16384.0, 6.103515625e-05), (16384.0, 0.0001220703125), (16384.0, 0.0009765625)]
+
+pip install mprpc
+
+
+eye_x:22.667917,eye_y:46.168917,mouth_x:19.820250,mouth_y:70.983791,nose_x:54.227833,nose_y:59.056667
+eye_x:18.075500,eye_y:39.093458,mouth_x:17.793917,mouth_y:60.903250,nose_x:50.986167,nose_y:47.767250
+eye_x:25.142083,eye_y:45.153291,mouth_x:27.872000,mouth_y:69.260167,nose_x:50.271917,nose_y:59.346750
+
+{u'url': u'http://deeptoneworks.com/profilemaker/faces/face_801.jpg', 
+
+u'img_id': u'81ef23f14c0d55436fff7f55d8c6e62d', u'img_width': 120, 
+u'session_id': u'a1aa66b2c3d04041889e0dee897471b9', 
+
+u'face': [{u'attribute': {u'gender': {u'confidence': 99.9912, u'value': u'Male'}, 
+
+u'age': {u'range': 10, u'value': 47}, 
+u'pose': {u'yaw_angle': {u'value': 0.008201},
+u'pitch_angle': {u'value': -0.0}, 
+u'roll_angle': {u'value': -2.23749}}, 
+
+u'glass': {u'confidence': 99.6678, u'value': u'None'},
+ u'race': {u'confidence': 72.2772, u'value': u'White'}, u'smiling': {u'value': 14.9572}}, u'face_id': u'7062058980c036c4797a3e0c0cc2de02', u'tag': u'', u'position': {u'eye_left': {u'y': 46.61175, u'x': 41.687833}, u'center': {u'y': 56.25, u'x': 52.916667}, u'width': 49.166667, u'mouth_left': {u'y': 71.541, u'x': 43.607667}, u'height': 49.166667, u'mouth_right': {u'y': 70.426583, u'x': 63.427917}, u'nose': {u'y': 59.056667, u'x': 54.227833}, u'eye_right': {u'y': 45.726083, u'x': 64.35575}}}], u'img_height': 120}
+eye_x:22.667917,eye_y:46.168917,mouth_x:19.820250,mouth_y:70.983791,nose_x:54.227833,nose_y:59.056667
+
+最適:C=2048.000000,gamma=0.000244,正答率=0.367791
+
+pip install msgpack-rpc-python

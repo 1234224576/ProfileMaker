@@ -2,8 +2,8 @@ var socket = io.connect();
 
 function sendbutton(){
 	console.log("ccc");
-	var socket = io.connect();
-	socket.emit('connection');
+	var socket = io.connect("http://127.0.0.1:8000");
+	socket.emit('predict');
 };
 
 $(function() {

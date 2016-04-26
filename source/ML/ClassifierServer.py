@@ -7,9 +7,10 @@ from sklearn.externals import joblib
 
 class ClassifierServer(RPCServer):
 	def predict(self,data):
-		print(data)
-		# scaler = joblib.load("./model/StandardScaler.pkl")
-		# data[:13] = scaler.transform(data[:13])
+		scaler = joblib.load("./model/StandardScaler.pkl")
+		data = data.split(",")
+		data = [float(x) for x in data]
+		data[:13] = scaler.transform(data[:13])
 		X = data[:13]
 		clf = joblib.load("./model/JobClassifier.pkl")
 		#今は職業に関する予測値のみ返している

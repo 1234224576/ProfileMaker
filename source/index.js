@@ -1,12 +1,53 @@
 var socket = io.connect();
 
 function sendbutton(){
-	console.log("ccc");
-	var socket = io.connect("http://127.0.0.1:8000");
-	socket.emit('predict');
+	$("#load_view").show();
+	//画像データのバイナリ化
+	var canvas = document.getElementById('canvas');
+	var can = canvas.toDataURL();
+	var base64Data = can.split(',')[1];
+	var data = window.atob(base64Data); 
+	var buff = new ArrayBuffer(data.length);
+	var arr = new Uint8Array(buff);
+	for(var i = 0, dataLen = data.length; i < dataLen; i++){
+		arr[i] = data.charCodeAt(i);
+	}
+	var blob = new Blob([arr], {type: 'image/png'});
+
+	var api_key = '54fe659b6b6484074e0d161226e8e441';
+	var api_secret = 'B-3Xcd1vEWras_OGkKnT5ROLfeZwKD3b';
+	var url = 'http://api.us.faceplusplus.com/detection/detect' + '?api_key=' + api_key + '&api_secret=' + api_secret +'&attribute=glass,pose,gender,age,race,smiling';
+
+	var formData = new FormData();
+	formData.append('img', blob);
+
+	$.ajax({
+		url: url,
+		type: 'POST',
+		data: formData,
+		contentType: false,
+		processData: false,
+		success: function(data, dataType) {
+			$("#load_view").hide();
+			if(data["face"].length == 0){
+				$("#error_info").text("顔の検出に失敗しました。もう一度撮影して下さい。");
+				return;
+			}
+			var faceData = createFaceData(data["face"][0]);
+			console.log(faceData);
+			var socket = io.connect("http://127.0.0.1:8000");
+			socket.emit('predict',faceData);
+		},
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			$("#load_view").hide();
+			console.log('Error : ' + errorThrown);
+		}
+	});
 };
 
 $(function() {
+	$("#load_view").hide();
+	
 	var video = document.getElementById('camera');
 	var localMediaStream = null;
 	var hasGetUserMedia = function() {
@@ -43,6 +84,11 @@ $(function() {
 		
 	}
 	$("#start").click(function() {
+		$("#error_info").text("");
+		if($("#name_text_box").val().length <= 0){
+			$("#submit_btn").prop("disabled", true);
+		}
+
 		if (localMediaStream) {
 			var canvas = document.getElementById('canvas');
 			var ctx = canvas.getContext('2d');
@@ -58,5 +104,37 @@ $(function() {
 			$('#captureModal').modal();
 		}
 	});
+
+	$("#name_text_box").keypress(function(){
+		if($(this).val().length > 0){
+			$("#submit_btn").prop("disabled", false);
+		}
+	});
 });
+
+function createFaceData(data){
+	var age = data["attribute"]["age"]["value"];
+	var gender = 0;
+	if(data["attribute"]["gender"]["value"] == "Female"){
+		gender = 1;
+	}
+	var smiling = data["attribute"]["smiling"]["value"];
+
+	var glass = 0;
+	if(data["attribute"]["glass"]["value"] == "Normal"){
+		glass = 1;
+	}else if(data["attribute"]["glass"]["value"] == "Dark"){
+		glass = 2;
+	}
+	var yaw = data["attribute"]["pose"]["yaw_angle"]["value"];
+	var pitch = data["attribute"]["pose"]["pitch_angle"]["value"];
+	var roll = data["attribute"]["pose"]["roll_angle"]["value"];
+	var eye_x = data["position"]["eye_right"]["x"] - data["position"]["eye_left"]["x"];
+	var eye_y = (data["position"]["eye_left"]["y"]+data["position"]["eye_right"]["y"])/2.0;
+	var mouth_x = data["position"]["mouth_right"]["x"] - data["position"]["mouth_left"]["x"];
+	var mouth_y = (data["position"]["mouth_left"]["y"]+data["position"]["mouth_right"]["y"])/2.0;
+	var nose_x = data["position"]["nose"]["x"];
+	var nose_y = data["position"]["nose"]["y"];
+	return age+","+gender+","+smiling+","+glass+","+yaw+","+pitch+","+roll+","+eye_x+","+eye_y+","+mouth_x+","+mouth_y+","+nose_x+","+nose_y;
+}
 

@@ -5,31 +5,34 @@ import SVMTester as sv
 import math
 
 data = np.loadtxt("train2.csv",delimiter=",")
-max_score = 0
-best_c = 0
-best_gamma = 0
 
-recm_c = []
-recm_gamma = []
+tester = sv.SVMTester(C=16.0,gamma=0.000244,data=data)
+tester.createPickel("./model/CatchCopyClassifier.pkl")
+# max_score = 0
+# best_c = 0
+# best_gamma = 0
 
-for i in range(10,15):
-	for j in range(-15,3):
-		c = math.pow(2,i)
-		gamma = math.pow(2,j)
-		tester = sv.SVMTester(C=c,gamma=gamma,data=data)
-		X,y = tester.preprocessing()
-		score = tester.experiment(X,y)
-		if score > max_score:
-			max_score = score
-			best_c = c
-			best_gamma = gamma
-		if score > 0.34:
-			recm_c.append((c,gamma))
+# recm_c = []
+# recm_gamma = []
 
-		print str(score)
+# for i in range(0,10):
+# 	for j in range(-20,0):
+# 		c = math.pow(2,i)
+# 		gamma = math.pow(2,j)
+# 		tester = sv.SVMTester(C=c,gamma=gamma,data=data)
+# 		X,y = tester.preprocessing()
+# 		score = tester.experiment(X,y)
+# 		if score > max_score:
+# 			max_score = score
+# 			best_c = c
+# 			best_gamma = gamma
+# 		if score > 0.34:
+# 			recm_c.append((c,gamma))
 
-print("最適:C=%lf,gamma=%lf,正答率=%lf")%(best_c,best_gamma,max_score)
-print("おすすめCとガンマ:"+str(recm_c))
+# 		print str(score)
+
+# print("最適:C=%lf,gamma=%lf,正答率=%lf")%(best_c,best_gamma,max_score)
+# print("おすすめCとガンマ:"+str(recm_c))
 
 # def classify(X_train,X_test,y_train,y_test,isDrawGraph=False):
 # 	clf = SVC(C=0.5,kernel="linear",degree=2)

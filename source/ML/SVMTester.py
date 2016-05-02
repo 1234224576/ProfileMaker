@@ -26,7 +26,7 @@ class SVMTester:
 		data_num = data.shape[0]
 
 		X = data[:,:13]
-		y = data[:,13:14].reshape(1,data_num)[0]
+		y = data[:,14:15].reshape(1,data_num)[0]
 		if isPCA:
 			pca = PCA(n_components=div)
 			pca.fit(X)
@@ -52,7 +52,7 @@ class SVMTester:
 		return clf.score(X_test,y_test)
 
 	def createPickel(self,filename):
-		X,y = self.preprocessing(isPCA=False,isPickel=True)
+		X,y = self.preprocessing(isPCA=False,isPickel=False)
 
 		clf = SVC(C=self.C,kernel="rbf",gamma=self.gamma)
 		clf.fit(X,y)

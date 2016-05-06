@@ -1,6 +1,13 @@
 var socket = io.connect();
 
+socket.on("showPdfFile",function(data){
+	console.log("GET");
+	window.open(data["url"]+"?time=" + escape(new Date()));
+});
+
+
 function sendbutton(){
+
 	$("#load_view").show();
 	//画像データのバイナリ化
 	var canvas = document.getElementById('canvas');

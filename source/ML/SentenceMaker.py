@@ -2,12 +2,6 @@
 import random
 import sqlite3
 
-class SentenceMaker:
-    def __init__(self):
-        self.connector = sqlite3.connect("./profilemaker.db")
-    # def createFirstSentence(self,copyNo):
-    #     #aa
-
 class FirstSentenceMaker:
     def __init__(self,connector,copyNo):
         self.connector = connector
@@ -29,19 +23,19 @@ class FirstSentenceMaker:
             sentence.append(row[2])
         return sentence[random.randint(0,2)]
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    connector = sqlite3.connect("./profilemaker.db")
-    print FirstSentenceMaker(connector,3).createFirstSentence()
-    # cursor  = connector.cursor()
-    # cursor.execute("select * from test_table order by code")
+#     connector = sqlite3.connect("./profilemaker.db")
+#     print FirstSentenceMaker(connector,3).createFirstSentence()
+#     # cursor  = connector.cursor()
+#     # cursor.execute("select * from test_table order by code")
  
-    # result = cursor.fetchall()
+#     # result = cursor.fetchall()
 
-    # for row in result:
-    #     print "===== Hit! ====="
-    #     print "code -- " + unicode(row[0])
-    #     print "name -- " + unicode(row[1])
+#     # for row in result:
+#     #     print "===== Hit! ====="
+#     #     print "code -- " + unicode(row[0])
+#     #     print "name -- " + unicode(row[1])
 
-    # cursor.close()
-    connector.close()
+#     # cursor.close()
+#     connector.close()

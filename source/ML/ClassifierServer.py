@@ -4,6 +4,8 @@ import sys
 from gevent.server import StreamServer
 from mprpc import RPCServer
 from sklearn.externals import joblib
+import sqlite3
+import SentenceMaker as sm
 
 class ClassifierServer(RPCServer):
 	def predict(self,data):
@@ -17,9 +19,6 @@ class ClassifierServer(RPCServer):
 		#今は職業に関する予測値のみ返している
 		r = jobClf.predict(X)
 		l = copyClf.predict(X)
-		print(r)
-		print(l)
-
 		return [r[0],l[0]]
 
 server = StreamServer(('127.0.0.1', 6000), ClassifierServer())

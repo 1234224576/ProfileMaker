@@ -12,6 +12,8 @@
     "jquery": "^2.2.3",
     "msgpack": "^1.0.2",
     "node-static": "^0.7.7",
-    "socket.io": "^1.4.5"
+    "pdfkit": "^0.7.2",
+    "socket.io": "^1.4.5",
+    "sqlite3": "^3.1.3"
   }
 }

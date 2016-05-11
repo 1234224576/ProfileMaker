@@ -5,11 +5,8 @@ socket.on("showPdfFile",function(data){
 	window.open(data["url"]+"?time=" + escape(new Date()));
 });
 
-
 function sendbutton(){
-
 	$("#load_view").show();
-	//画像データのバイナリ化
 	var canvas = document.getElementById('canvas');
 	var can = canvas.toDataURL();
 	var base64Data = can.split(',')[1];
@@ -42,8 +39,9 @@ function sendbutton(){
 			}
 			var faceData = createFaceData(data["face"][0]);
 			console.log(faceData);
+			var name = $("#name_text_box").val();
 			var socket = io.connect("http://127.0.0.1:8000");
-			socket.emit('predict',faceData);
+			socket.emit('predict',{faceData:faceData,name:name});
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
 			$("#load_view").hide();
@@ -106,8 +104,14 @@ $(function() {
 
 			canvas.setAttribute("width", w);
 			canvas.setAttribute("height", h);
-			ctx.drawImage(video,180,0,300,400,0, 0, w, h);
+
+			ctx.drawImage(video,130,0,400,400,0,0,w,h);
 			img.src = canvas.toDataURL('image/png');
+			$.ajax({
+			    url:"/upload",
+			    method:"post",
+			    data:{img:img.src,filename:"face.png"}
+			});
 			$('#captureModal').modal();
 		}
 	});

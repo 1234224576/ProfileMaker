@@ -3,6 +3,7 @@ var fs = require('fs');
 var rpc = require('./node-msgpack-rpc/lib/msgpack-rpc');
 var st = require('node-static');
 var file = new st.Server('./');
+var qs = require('querystring');
 
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database(__dirname + '/ML/profilemaker.db');
@@ -11,6 +12,19 @@ var PDFDocument = require('pdfkit');
 var doc = new PDFDocument();
 
 var server = http.createServer(function (request, response) {
+	if(request.url=='/upload'){
+		var body='';
+		request.on('data', function (data) {
+		   body +=data;
+		});
+		request.on('end',function(){
+			var POST =  qs.parse(body);
+			var base64Data = POST["img"].replace(/^data:image\/png;base64,/, "");
+			fs.writeFile(POST["filename"],base64Data,'base64',function(err){
+			  // console.log(err);
+			});
+		});
+	}
     request.addListener('end', function () {
         file.serve(request, response);
     }).resume();
@@ -21,9 +35,9 @@ io.sockets.on('connection', function(socket) {
 	socket.on('predict', function(data){
 		console.log("listen");
 		var c = rpc.createClient(6000, '127.0.0.1', function() {
-		  c.invoke('predict',data, function(err, response) {
+		  c.invoke('predict',data["faceData"], function(err, response) {
 		  	console.log("wroks_label:"+response);
-		  	createPdf(response[0],response[1]);
+		  	createPdf(response[0],response[1],data["name"]);
 		    c.close();
 		  });
 		});
@@ -50,7 +64,7 @@ io.sockets.on('connection', function(socket) {
 		});
 	}
 
-	function createPdf(job_id,copy_id){
+	function createPdf(job_id,copy_id,name){
 		var job = "";
 	  	getJobStr(job_id).then(function success(j){
 	  		job = j;
@@ -60,8 +74,10 @@ io.sockets.on('connection', function(socket) {
 	  		console.log(job);
 	  		doc.font('kochi-mincho-subst.ttf');
 	  		doc.image("template.png", 0, 0, {fit:[500, 500]});
-	  		doc.fontSize(30).text(job,100,200);
-	  		doc.fontSize(20).text(sentence,100,300);
+	  		doc.fontSize(20).text(name,40,270);
+	  		doc.fontSize(30).text(job,100,290);
+	  		doc.fontSize(20).text(sentence,100,325);
+	  		doc.image("face.png", 30, 30, {fit:[200, 200]});
 	  		doc.pipe(fs.createWriteStream('output.pdf'),{end:true}).on('finish', function () {
 	  			console.log("complete");
 	  			socket.broadcast.emit('showPdfFile',{url:"http://127.0.0.1:8000/output.pdf"});

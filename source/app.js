@@ -37,7 +37,7 @@ io.sockets.on('connection', function(socket) {
 		var c = rpc.createClient(6000, '127.0.0.1', function() {
 		  c.invoke('predict',data["faceData"], function(err, response) {
 		  	console.log("wroks_label:"+response);
-		  	createPdf(response[0],response[1],data["name"]);
+		  	createPdf(response[0],response[1],data["name"],data["age"],data["gender"]);
 		    c.close();
 		  });
 		});
@@ -62,9 +62,9 @@ io.sockets.on('connection', function(socket) {
 				count++;
 		  	});
 		});
-	}
+	};
 
-	function createPdf(job_id,copy_id,name){
+	function createPdf(job_id,copy_id,name,age,gender){
 		var job = "";
 	  	getJobStr(job_id).then(function success(j){
 	  		job = j;
@@ -73,11 +73,22 @@ io.sockets.on('connection', function(socket) {
 	  		console.log(sentence);
 	  		console.log(job);
 	  		doc.font('kochi-mincho-subst.ttf');
-	  		doc.image("template.png", 0, 0, {fit:[500, 500]});
-	  		doc.fontSize(20).text(name,40,270);
-	  		doc.fontSize(30).text(job,100,290);
-	  		doc.fontSize(20).text(sentence,100,325);
-	  		doc.image("face.png", 30, 30, {fit:[200, 200]});
+	  		doc.image("back.png", 30, 30, {fit:[521,383]});
+	  		doc.fontSize(16).text(name,300,80);
+				doc.fontSize(16).text(age+"歳",300,125);
+				if(gender == "Male") gender = "男";
+				else gender = "女";
+				doc.fontSize(16).text(gender,470,125);
+	  		doc.fontSize(16).text(job,310,165);
+
+				var r=new RegExp(".{1,"+35+"}","g");
+				var sentences = sentence.match(r);
+				console.log(sentences);
+				for(var i=0;i<sentences.length;i++){
+					doc.fontSize(14).text(sentences[i],40,255 + (i*35));
+				}
+
+	  		doc.image("face.png", 30, 30, {fit:[170, 170]});
 	  		doc.pipe(fs.createWriteStream('output.pdf'),{end:true}).on('finish', function () {
 	  			console.log("complete");
 	  			socket.broadcast.emit('showPdfFile',{url:"http://127.0.0.1:8000/output.pdf"});
@@ -87,9 +98,5 @@ io.sockets.on('connection', function(socket) {
 
 	  	});
 	}
-
 });
-
-
-
 server.listen(8000);

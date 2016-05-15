@@ -10,7 +10,7 @@ function sendbutton(){
 	var canvas = document.getElementById('canvas');
 	var can = canvas.toDataURL();
 	var base64Data = can.split(',')[1];
-	var data = window.atob(base64Data); 
+	var data = window.atob(base64Data);
 	var buff = new ArrayBuffer(data.length);
 	var arr = new Uint8Array(buff);
 	for(var i = 0, dataLen = data.length; i < dataLen; i++){
@@ -41,18 +41,18 @@ function sendbutton(){
 			console.log(faceData);
 			var name = $("#name_text_box").val();
 			var socket = io.connect("http://127.0.0.1:8000");
-			socket.emit('predict',{faceData:faceData,name:name});
+			socket.emit('predict',{faceData:faceData,name:name,age:data["face"][0]["attribute"]["age"]["value"],gender:data["face"][0]["attribute"]["gender"]["value"]});
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
 			$("#load_view").hide();
 			console.log('Error : ' + errorThrown);
 		}
 	});
-};
+}
 
 $(function() {
 	$("#load_view").hide();
-	
+
 	var video = document.getElementById('camera');
 	var localMediaStream = null;
 	var hasGetUserMedia = function() {
@@ -71,7 +71,7 @@ $(function() {
 			video.src = window.URL.createObjectURL(stream);
 			localMediaStream = stream;
 		}, onFailSoHard);
-		
+
 		var c = document.getElementById('marker_view');
 		var context = c.getContext('2d');
 		context.strokeStyle = "rgb(255,0,0)";
@@ -86,7 +86,7 @@ $(function() {
 		context.lineTo(100,100);
 		context.closePath();
 		context.stroke();
-		
+
 	}
 	$("#start").click(function() {
 		$("#error_info").text("");
@@ -148,4 +148,3 @@ function createFaceData(data){
 	var nose_y = data["position"]["nose"]["y"];
 	return age+","+gender+","+smiling+","+glass+","+yaw+","+pitch+","+roll+","+eye_x+","+eye_y+","+mouth_x+","+mouth_y+","+nose_x+","+nose_y;
 }
-

@@ -41,14 +41,14 @@ io.sockets.on('connection', function(socket) {
 		    c.close();
 		  });
 		});
-    });
+  });
 
 	var getJobStr = function(job_id){
 		return new Promise(function(success){
 			var sql = 'SELECT * FROM job WHERE id = '+job_id+';';
 			db.each(sql, function(err, row) {
 			    success(row.job);
-		  	});
+		  });
 		});
 	};
 
@@ -57,10 +57,18 @@ io.sockets.on('connection', function(socket) {
 			var rand = Math.floor( Math.random() * 3);
 			var count = 0;
 			var sql = 'SELECT * FROM firstSentence WHERE catchcopy_id = '+copy_id+';';
+
+			var sentence = "";
 			db.each(sql, function(err, row) {
-				if(count == rand) success(row.text);
+				if(count == rand){
+					sentence = row.text;
+					sql = 'SELECT * FROM secondSentence WHERE job_id = '+job_id+' AND catchcopy_id = '+copy_id+';';
+					db.each(sql,function(err,row){
+						success(sentence+row.text);
+					});
+				}
 				count++;
-		  	});
+		  });
 		});
 	};
 

@@ -1,4 +1,6 @@
+<!DOCTYPE html>
 <html>
+	<title>profile maker</title>
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,8 +10,36 @@
 		<script src="./static/jquery-1.12.3.min.js"></script>
 		<script src="./index.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+		<!-- 3D系 -->
+		<script src="./static/three.min.js"></script>
+    <script src="./static/dat.gui.min.js"></script>
+    <script src="./static/stats.min.js"></script>
+    <script src="./static/CSS3DRenderer.js"></script>
+    <script src="./static/OrbitControls.js"></script>
+		<script src="./static/tween.js"></script>
+		<script src="./3dbackground.js"></script>
+
 	</head>
 	<style type="text/css">
+		body{
+		width:100%;
+		margin: 0;
+		padding: 0;
+		background-color: black;
+	}
+	body #wrapper{
+		width: 100%;
+		height:100%;
+		min-height:100%;
+		overflow: hidden;
+		position: fixed;
+	}
+	#container {
+		position: absolute;
+		top:0;
+		right:20px;
+		left:20px;}
 		#camera {
 			width: 400px;
 			height: 400px;
@@ -19,38 +49,62 @@
 			width: 300px;
 			height: 300px;
 		}
+
+		
+		#someidentifier {
+        position: fixed;
+        z-index: 100;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: black;
+        opacity: 0.7;
+        color: #ffffff;
+        font-family: Calibri;
+    }
+
+    #query {
+        margin-left: 5px;
+    }
+
 	</style>
 	<body>
-		<div style="text-align: center; margin-top: 50px;">
-			<video id="camera" autoplay></video>
-			<canvas id="marker_view" style="position: absolute;width:450px;height:450px;margin-left: -345px;"></canvas>
-			<button type="button" id="start" class="btn btn-primary btn-lg" style="display: block;margin:30px auto;">撮影</button>
-		</div>
-		<canvas id="canvas" hidden></canvas>
-		<div class="modal fade" id="captureModal" tabindex="-1">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"><span>×</span></button>
-						<h4 class="modal-title">撮影完了</h4>
-					</div>
-					<div class="modal-body" style="text-align:center;">
-						<img id="img">
-						<div class="input-group" style="width:300px;margin: 20px auto;">
-							<span class="input-group-addon">名前</span>
-							<input type="text" class="form-control" id="name_text_box" placeholder="京産 太郎">
+		<div id="wrapper"></div>
+
+		<div id="container"> <!--ここにコンテンツ-->
+
+			<div style="text-align: center; margin-top: 50px;">
+				<video id="camera" autoplay></video>
+				<canvas id="marker_view" style="position: absolute;width:450px;height:450px;margin-left: -345px;"></canvas>
+				<button type="button" id="start" class="btn btn-primary btn-lg" style="display: block;margin:30px auto;">撮影</button>
+			</div>
+			<canvas id="canvas" hidden></canvas>
+			<div class="modal fade" id="captureModal" tabindex="-1">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span>×</span></button>
+							<h4 class="modal-title">撮影完了</h4>
 						</div>
-						<div id="error_info" style="font-size: 12px;color: red;"></div>
-					</div>
-					<div class="modal-footer" style="text-align:center;">
-						<button type="button" class="btn btn-default" data-dismiss="modal">やり直す</button>
-						<button type="button" class="btn btn-primary" id="submit_btn" onclick="sendbutton()">送信</button>
-					</div>
-					<div id="load_view" style="position:absolute;top:40%;left:50%;margin-left: -30px">
-						<img src="./static/load.gif">
+						<div class="modal-body" style="text-align:center;">
+							<img id="img">
+							<div class="input-group" style="width:300px;margin: 20px auto;">
+								<span class="input-group-addon">名前</span>
+								<input type="text" class="form-control" id="name_text_box" placeholder="京産 太郎">
+							</div>
+							<div id="error_info" style="font-size: 12px;color: red;"></div>
+						</div>
+						<div class="modal-footer" style="text-align:center;">
+							<button type="button" class="btn btn-default" data-dismiss="modal">やり直す</button>
+							<button type="button" class="btn btn-primary" id="submit_btn" onclick="sendbutton()">送信</button>
+						</div>
+						<div id="load_view" style="position:absolute;top:40%;left:50%;margin-left: -30px">
+							<img src="./static/load.gif">
+						</div>
 					</div>
 				</div>
 			</div>
+
 		</div>
 	</body>
 </html>

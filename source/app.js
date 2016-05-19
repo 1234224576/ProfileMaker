@@ -37,6 +37,7 @@ io.sockets.on('connection', function(socket) {
 		var c = rpc.createClient(6000, '127.0.0.1', function() {
 		  c.invoke('predict',data["faceData"], function(err, response) {
 		  	console.log("wroks_label:"+response);
+		  	console.log(err);
 		  	createPdf(response[0],response[1],data["name"],data["age"],data["gender"]);
 		    c.close();
 		  });

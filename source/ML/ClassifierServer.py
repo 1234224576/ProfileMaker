@@ -9,13 +9,13 @@ import SentenceMaker as sm
 
 class ClassifierServer(RPCServer):
 	def predict(self,data):
-		scaler = joblib.load("./model/StandardScaler.pkl")
+		scaler = joblib.load("./ML/model/StandardScaler.pkl")
 		data = data.split(",")
 		data = [float(x) for x in data]
 		data[:13] = scaler.transform(data[:13])
 		X = data[:13]
-		jobClf = joblib.load("./model/JobClassifier.pkl")
-		copyClf = joblib.load("./model/CatchCopyClassifier.pkl")
+		jobClf = joblib.load("./ML/model/JobClassifier.pkl")
+		copyClf = joblib.load("./ML/model/CatchCopyClassifier.pkl")
 		#今は職業に関する予測値のみ返している
 		r = jobClf.predict(X)
 		l = copyClf.predict(X)
